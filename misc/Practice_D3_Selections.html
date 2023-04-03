@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+
+    <body>
+        <div id="page-header">
+            <h1>Hello World!</h1>
+            <p class="main-paragraph"></p>
+        </div>
+
+    </body>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+        let header = d3.select("#page-header");
+        console.log(header.node());
+
+        let ps = d3.selectAll("p");
+        console.log(ps.nodes());
+    </script>
+
+    function change1() {
+        let p = d3.select(".main-paragraph")
+        p.text("New Text");
+    }
+
+    function change2() {
+        d3.selectAll("p").text("Next text 2");
+    }
+
+    function change3() {
+        d3.select("p")
+            .html("<b>Test</b> normal")
+    }
+
+    function change4() {
+        d3.select("ul").append("<li></li>").text("New text");
+        d3.select("li").remove();
+    }
+
+    let sum = clients.reduce((prev, curr) => {
+        return prev + curr.value;
+    }, 0)
+
+    let clients = [{name: "John", weight:}, {}, {}]
+    let weightSum = d3.sum(clients, (d) => d.Weight)
+    let WeightMean = d3.mean(clients, 
+        d => d.Weight)
+
+    let extent = d3.extent(clients, d => d.Weight)
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+    <body>
+        <div id="container">
+
+        </div>
+    </body>
+    <script>
+        var employees = [ {name:"Ali", salary: 50000},
+                  {name:"Zoe", salary:75000},
+                  {name:"Jack", salary: 60000},
+                  {name:"Felix", salary: 35000}];
+
+        let totalsalary1 = d3.sum(employees, (d) => d.salary);
+        console.log("totalsalary1: " + totalsalary1);
+
+        let totalsalary2 = employees.reduce(
+            (cur, prev) => cur + prev.salary, 0)
+        console.log("totalsalary2: " + totalsalary2);
+
+        let totalsalary3 = d3.sum(employees.map((d) => d.salary))
+        console.log("totalsalary3: " + totalsalary3);
+
+        // Question 3
+        let cars = [ {model:"500", price: 50000},
+            {model:"600", price:75000},
+            {model:"700", price: 60000},
+            {model:"400", price: 35000}];
+
+        cars = cars.filter(d => d.price > 55000)
+        let m= d3.mean(cars, (d)=> d.price)
+        console.log("mean = " + m);
+
+
+        // QUestion 5
+        let container= d3.select("#container");   
+        cars = [ 
+        {name:"toyota", price: 50000},
+        {name:"BMW", price:75000},
+        {name:"Tesla", price: 60000},
+        {name:"Jeep", price: 35000}];
+
+        let join = container
+            .selectAll("li")
+            .data(cars);
+
+            /*
+        join.enter()
+            .append("li")
+            .text(d => d.name + " " + d.price)
+        */
+
+    </script>
+</html>
