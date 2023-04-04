@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif
+        }
+
+        h1 {
+            background-color: #2a5599;
+            color: white;
+            padding: 5px;
+        }
+
+        svg {
+            border: black solid 1px;
+            width: 100%;
+        }
+
+        .line {
+            fill: none;
+            stroke: blue;
+        }
+    </style>
+    <script src="d3.js"></script> 
+</head>
+<body>
+    <div class="mainView">
+        <svg id="container" height="300" width="500">
+            <g id="body" transform="translate(50, 50)"></g>
+        </svg>
+    </div>
+</body>
+<script src="d3.js"></script>
+<script>
+    d3.csv("data.csv").then(showData);
+
+    let body = d3.select("#body");
+    function showData(data) {
+        let bodyHeight = 200
+        let bodyWidth = 400
+
+        data = data.map(d => ({
+            date: new Date(d.date),
+            price: +d.price
+        }))
+        let maxValue = d3.max(data, d => d.price)
+        console.log("MaxValue: " + maxValue);
+
+        let yScale = d3.scaleLinear()
+            .range([bodyHeight, 0])
+            .domain([0, maxValue]);
+
+        body.append("g")
+            .style("transform", "translate(0px, 20px)")
+            .call(d3.axisLeft(yScale))
+
+        let xScale = d3.scaleTime()
+            .domain(d3.extent(data, d=> d.date))
+            .range([0, bodyWidth])
+        body.append("g")
+            .style("transform", `translate(0px, ${bodyHeight + 20}px)`)
+            .call(d3.axisBottom(xScale))
+            //.tickFormat(d3.timeFormat("%b"))
+
+            valueline = d3.line()
+                .x(d => xScale(d.date))
+                .y(d => yScale(d.price))
+        body.append("path")
+            .datum(data)
+            .attr("d", valueline)
+            .attr("class", "line")
+    }
+    /*
+    let lineGenerator = d3.line()
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.price))
+
+    d3.select("#chart")
+        .append("path")
+        .datum(data)
+        .attr("d", lineGenerator)
+    d3.lineRadial(), angle, radius
+
+
+    */
+</script>
+
+</html>

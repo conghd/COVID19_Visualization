@@ -1,0 +1,57 @@
+<html>
+
+<head>
+    <style>
+        
+
+
+
+    </style>
+</head>
+
+<body>
+    <svg id="container" height="300" width="500">
+        <g id="body" transform="translate(0,0)"></g>
+    </svg>
+</body>
+<script src="d3.js"></script>
+<script>
+    let body = d3.select("#body")
+    
+    Promise.all([
+        d3.csv("dataset.csv"),
+        d3.json("countries.geo.json")
+    ]).then(showData)
+
+
+    function showData(datasources) {
+        let mapInfo = datasources[1]
+        let data = datasources[0]
+        console.log(data)
+        
+        let bodyHeight = 400
+        let bodyWidth = 400
+
+        var projection = 
+            d3.geoMercator()
+                .scale(80)
+                .translate([bodyWidth / 2, bodyHeight / 2])
+
+
+        var path = d3.geoPath()
+            .projection(projection);
+
+        body.selectAll("path").data(mapInfo.features)
+            .enter().append("path")
+            .attr("d", d => path(d))
+            .attr("stroke", "black")
+            .attr("fill", 
+                "white")
+
+
+    }
+
+
+</script>
+
+</html>
