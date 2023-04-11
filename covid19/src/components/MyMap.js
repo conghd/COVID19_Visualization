@@ -132,6 +132,16 @@ const MyMap = ({ data, myFunc}) => {
         myrender();
 
 
+        d3.select('#zoom-in').on('click', function() {
+            // Smooth zooming
+              zoom.scaleBy(svg.transition().duration(750), 1.3);
+          });
+          
+          d3.select('#zoom-out').on('click', function() {
+            // Ordinal zooming
+            zoom.scaleBy(svg.transition().duration(750), 1 / 1.3);
+          });
+
         function showTooltip(d, coords) {
             let text = `<b>${d.city || d.province || d.country}</b><br/>\
             Confirmed cases: ${d3.format(",")(d.total)}`;
@@ -214,6 +224,17 @@ const MyMap = ({ data, myFunc}) => {
             <g id="gdata"></g>
             <g id="glegend"></g>
             <rect className="overlay" ></rect>
+            <g class="zoom-controls" transform="translate(10, 10)">
+            <g id="zoom-in" transform="translate(0, 0)">
+              <rect width="30" height="30"></rect>
+              <line x1="5" y1="15" x2="25" y2="15"></line>
+              <line x1="15" y1="5" x2="15" y2="25"></line>
+            </g>
+            <g id="zoom-out" transform="translate(30, 0)">
+              <rect width="30" height="30"></rect>
+              <line x1="5" y1="15" x2="25" y2="15"></line>
+            </g>
+            </g>
         </svg>
         <div id="tooltip"></div>
         </>
