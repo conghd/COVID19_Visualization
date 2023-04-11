@@ -27,6 +27,7 @@ svg {
     position: absolute; 
     display: none;
     background-color: white;
+    font-size: 13px;
 }
 
 #glegend text {

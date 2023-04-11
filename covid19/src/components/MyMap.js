@@ -98,7 +98,7 @@ const MyMap = ({ data, myFunc}) => {
         .attr("opacity", 0.9)
         //.attr("cx", d => projection([+d.long, +d.lat])[0])
         //.attr("cy", d => projection([+d.long, +d.lat])[1])
-        .attr("fill", "#2a5599")
+        .attr("fill", "#eed202")
         .on("mouseover", (e, d) => {
             d3.select(this).transition().duration('50').attr("opacity", '0.85');
             //console.log("mouseenter");
@@ -119,10 +119,10 @@ const MyMap = ({ data, myFunc}) => {
         let glegend = d3.select("#glegend")
         for (let i = 0; i < caseLegends.length-1; i++) {
             radiusArr.push({"r": populationScale(0.5 * caseLegends[i + 1] + 0.5*caseLegends[i]) || 0, "low": caseLegends[i],
-                        "cx": 30, "cy": 440 - i * 22, "high": (i == caseLegends.length-2) ? null : caseLegends[i+1]})
+                        "cx": 30, "cy": 420 - i * 22, "high": (i == caseLegends.length-2) ? null : caseLegends[i+1]})
         }
         glegend.selectAll("circle").data(radiusArr).enter().append("circle")
-            .attr("cx", d => d.cx).attr("cy", d => d.cy).style("fill", "#404080")
+            .attr("cx", d => d.cx).attr("cy", d => d.cy).style("fill", "#eed202")
 
         glegend.selectAll("text").data(radiusArr).enter().append("text")
             .attr("x", d => d.cx + 25).attr("y", d => d.cy)
@@ -224,7 +224,7 @@ const MyMap = ({ data, myFunc}) => {
             <g id="gdata"></g>
             <g id="glegend"></g>
             <rect className="overlay" ></rect>
-            <g class="zoom-controls" transform="translate(10, 10)">
+            <g className="zoom-controls" transform="translate(10, 10)">
             <g id="zoom-in" transform="translate(0, 0)">
               <rect width="30" height="30"></rect>
               <line x1="5" y1="15" x2="25" y2="15"></line>

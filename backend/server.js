@@ -19,6 +19,9 @@ app.get('/', (request, response) => {
 
 app.get('/regions', db.getRegions)
 app.get('/cases', db.getCases)
+app.get('/totalcases/:region_id/:from/:to', db.getTotalCases)
+app.get('/totaldeaths/:region_id/:from/:to', db.getTotalDeaths)
+
 
 /*
 app.get('/users/:id', db.getUserById)

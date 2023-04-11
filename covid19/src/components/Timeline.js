@@ -3,8 +3,7 @@ import { Component } from 'react';
 import { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 
-const Timeline = ({}) => {
-
+const Timeline = (props) => {
 
     return (
         <></>

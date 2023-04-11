@@ -31,9 +31,85 @@ const getCases = (request, response) => {
 
 }
 
+const getTotalCases = (request, response) => {
+    const { region_id, from, to} = request.params
+    console.log("region: " + region_id)
+    console.log("from: " + from)
+    console.log("to: " + to)
+    let sql = "select date_trunc('week', c.date) as date, sum(c.count) as total from confirmed_cases c, regions r \
+    where c.region_id = r.id "
+    let params = []
+    if (region_id != "0" && region_id != 0) {
+      sql = sql + " AND c.region_id = $1"
+      params.push(region_id)
+      if (from != "" && to != "") {
+        sql = sql + " AND c.date >= $2 AND c.date <= $3";
+        params.push(from)
+        params.push(to)
+      }
+
+    } else {
+      if (from != "" && to != "") {
+        sql = sql + " AND c.date >= $1 AND c.date <= $2";
+        params.push(from)
+        params.push(to)
+      }
+    }
+
+    sql = sql + " GROUP BY(date)"
+    //sql = sql + " GROUP BY(c.date)"
+    //sql = sql + " GROUP BY WEEK(FROM_UNIXTIME(c.date))"
+      
+    pool.query(sql, params, (error, results) => {
+        if (error) {
+            throw error
+        }
+    response.status(200).json(results.rows)
+    })
+}
+
+const getTotalDeaths = (request, response) => {
+  const { region_id, from, to} = request.params
+  console.log("region: " + region_id)
+  console.log("from: " + from)
+  console.log("to: " + to)
+  let sql = "select date_trunc('week', c.date) as date, sum(c.count) as total from deaths c, regions r \
+  where c.region_id = r.id "
+  let params = []
+  if (region_id != "0" && region_id != 0) {
+    sql = sql + " AND c.region_id = $1"
+    params.push(region_id)
+    if (from != "" && to != "") {
+      sql = sql + " AND c.date >= $2 AND c.date <= $3";
+      params.push(from)
+      params.push(to)
+    }
+
+  } else {
+    if (from != "" && to != "") {
+      sql = sql + " AND c.date >= $1 AND c.date <= $2";
+      params.push(from)
+      params.push(to)
+    }
+  }
+
+  sql = sql + " GROUP BY(date)"
+  //sql = sql + " GROUP BY(c.date)"
+  //sql = sql + " GROUP BY WEEK(FROM_UNIXTIME(c.date))"
+    
+  pool.query(sql, params, (error, results) => {
+      if (error) {
+          throw error
+      }
+  response.status(200).json(results.rows)
+  })
+}
+
 module.exports = {
     getRegions,
     getCases,
+    getTotalCases,
+    getTotalDeaths
 }
 
 
