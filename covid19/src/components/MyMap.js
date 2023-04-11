@@ -7,10 +7,13 @@ import { useD3 } from '../hooks/useD3';
 import "./Map.css";
 
 const MyMap = ({ data, myFunc}) => {
+
+    useEffect(() => {
+    }, [data]);
+
     const ref = useD3((svg) => {
         const width = svg.node().getBoundingClientRect().width;
         const height = svg.node().getBoundingClientRect().height;
-        console.log("width: " + width + ", height: " + height);
 
         // getMapProjection
         const initialLongitude = -95;            // Initial longitude to center
@@ -47,29 +50,97 @@ const MyMap = ({ data, myFunc}) => {
 
         svg.attr("width", width)
            .attr("height", height);
-        var map = d3.select("g")
+        var map = d3.select("#gmap")
 
         d3.select(".overlay")
             .attr("width", width)
             .attr("height", height);
 
-        console.log("scaleExtent: " + scaleExtent);
-        console.log("projection.scale(): " + projection.scale())
         var zoom = d3.zoom()       // Set up zoom
             .scaleExtent(scaleExtent)
             .on("zoom", handlePanZoom2);
         zoom.scaleTo(svg.transition().duration(0), projection.scale());
         svg.call(zoom);                     // Attach zoom event
 
-        console.log(geoJSON);
 
         map.selectAll('path')
             .data(geoJSON.features)
             .enter()
-            .append('path');
+            .append('path')
+        .on("mouseover", (d, i) => {
+
+            d3.select(this).transition().duration('50').attr("opacity", '0.85');
+            console.log("mouseenter");
+            ///showTooltip(d, [e.event.pageX, e.event.pageY])
+        })
+        .on("mouseleave", (d, i) => {
+            console.log("path::mouseleave")
+
+        })
         
+        
+        
+        // Calculate radius
+        console.log(data)
+        let maxCnt = d3.max(data, item => +item.total)
+        let maxRadius = 20
+        let populationScale = d3.scaleSqrt()
+            .domain([0, maxCnt])
+            .range([0, maxRadius])
+        // draw countries
+        let gdata = d3.select("#gdata")
+        gdata.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        //.attr("r", 5)
+        .attr("r", d => populationScale(+d.total))
+        .attr("opacity", 0.9)
+        //.attr("cx", d => projection([+d.long, +d.lat])[0])
+        //.attr("cy", d => projection([+d.long, +d.lat])[1])
+        .attr("fill", "#2a5599")
+        .on("mouseover", (e, d) => {
+            d3.select(this).transition().duration('50').attr("opacity", '0.85');
+            //console.log("mouseenter");
+            showTooltip(d, [d3.pointer(e)[0], d3.pointer(e)[1]])
+        })
+        .on("mouseleave", (e, d) => {
+            //console.log("mouseleave");
+            d3.select("#tooltip").style("display", "none")
+
+        })
+        .on("click", d => {
+            console.log("click");
+        })
+        
+        //===== LEGEND =========
+        let radiusArr = []
+        let caseLegends = [0, 1000000, 4000000, 8000000, 15000000, 25000000, 50000000]
+        let glegend = d3.select("#glegend")
+        for (let i = 0; i < caseLegends.length-1; i++) {
+            radiusArr.push({"r": populationScale(0.5 * caseLegends[i + 1] + 0.5*caseLegends[i]) || 0, "low": caseLegends[i],
+                        "cx": 30, "cy": 440 - i * 22, "high": (i == caseLegends.length-2) ? null : caseLegends[i+1]})
+        }
+        glegend.selectAll("circle").data(radiusArr).enter().append("circle")
+            .attr("cx", d => d.cx).attr("cy", d => d.cy).style("fill", "#404080")
+
+        glegend.selectAll("text").data(radiusArr).enter().append("text")
+            .attr("x", d => d.cx + 25).attr("y", d => d.cy)
+            .text(d => `${d3.format("~s")(d.low)} ~ ${d.high ? d3.format("~s")(d.high) : ""}`).style("font-size", "13px").style("color", "gray").attr("alignment-baseline","middle")
+
+        //========================
         myrender();
 
+
+        function showTooltip(d, coords) {
+            let text = `<b>${d.city || d.province || d.country}</b><br/>\
+            Confirmed cases: ${d3.format(",")(d.total)}`;
+            d3.select("#tooltip").html(text)
+                .style("display", "block")
+                .style("top", `${coords[1] + 10}px`)
+                .style("left", `${coords[0] + 10}px`)
+
+        }
         // The following variables track the last processed event.
         var translateLast = [0,0];
         var scaleLast     = null;
@@ -81,6 +152,14 @@ const MyMap = ({ data, myFunc}) => {
             map.selectAll('path').filter((d, i) => {
                 return i === 21;
             }).style("fill", 'none');
+
+            gdata.selectAll("circle")
+                .attr("cx", d => projection([+d.long, +d.lat])[0])
+                .attr("cy", d => projection([+d.long, +d.lat])[1])
+
+            glegend.selectAll("circle").attr("cx", d => d.cx).attr("cy", d => d.cy).attr("r", d => d.r)
+            glegend.selectAll("text").attr("x", d => d.cx + 25).attr("y", d => d.cy)
+
         }
 
         function handlePanZoom2(e) {
@@ -88,7 +167,6 @@ const MyMap = ({ data, myFunc}) => {
                 // Handle pan and zoom events
 
             var transform = d3.zoomTransform(this);
-            console.log(e.transform);
 
             var translate = [transform.x, transform.y];
             var scale = transform.k;
@@ -114,7 +192,7 @@ const MyMap = ({ data, myFunc}) => {
                     delta[1] = height - viewMax[1];
 
                 //projection.translate ([ tp[0], tp[1] + delta[1] ]);
-                console.log("tp0: " + tp[0] + ", tp1: " + (tp[1]+ delta[1]));
+                //console.log("tp0: " + tp[0] + ", tp1: " + (tp[1]+ delta[1]));
 
                 projection.translate ([ tp[0], tp[1] + delta[1] ]);
             }
@@ -127,13 +205,18 @@ const MyMap = ({ data, myFunc}) => {
             myrender();
         }
 
-    }, []);
+    }, [data.length]);
 
     return (
+        <>
         <svg id="map" ref={ref} width="100%" height="100%">
-            <g></g>
+            <g id="gmap"></g>
+            <g id="gdata"></g>
+            <g id="glegend"></g>
             <rect className="overlay" ></rect>
         </svg>
+        <div id="tooltip"></div>
+        </>
     );
 }
 

@@ -10,6 +10,7 @@ svg {
   }
 
   .overlay {
+      display: none;
       fill: none;
       pointer-events: all;
   }
@@ -17,3 +18,17 @@ svg {
   #map {
       margin-top: 2em;
   }
+
+#tooltip {
+    width: 240px;
+    height: 120px;
+    border: solid 1px gray;
+    padding: 5px;
+    position: absolute; 
+    display: none;
+    background-color: white;
+}
+
+#glegend text {
+  color: red;
+}
