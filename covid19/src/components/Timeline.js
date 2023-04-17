@@ -27,7 +27,9 @@ const Timeline = ({data, myFunc }) => {
     }, [data.length])
 
     return (
-        <svg width="600" height="100" id="idtimeline" ref={ref}/>
+        <div class="svg-container">
+            <svg id="idtimeline" class="svg-content" ref={ref}/>
+        </div>
     )
 
 }

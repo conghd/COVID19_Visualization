@@ -4,6 +4,7 @@ import * as d3 from "d3"
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
 import { useState, useEffect, useRef, createContext } from 'react';
 import MyMap from './components/MyMap';
 import CaseChart from './components/CaseChart';
@@ -33,7 +34,7 @@ function App() {
       }).then(data => {
         setCountries(data);
       }).catch (error => {
-        console.log("error")
+        //console.log("error")
       })
 
       fetch("http://localhost:3001/totalcases/" + regionId + "/" + from + "/" + to)
@@ -42,7 +43,7 @@ function App() {
           return response.json()
         }
       }).then(data => {
-        console.log(data)
+        //console.log(data)
         setCases(data);
       }).catch (error => {
         console.log("error")
@@ -54,7 +55,7 @@ function App() {
           return response.json()
         }
       }).then(data => {
-        console.log(data)
+        //console.log(data)
         setDeaths(data);
       }).catch (error => {
         console.log("error")
@@ -77,10 +78,12 @@ function App() {
       <Row style={{height: "85%"}}>
         <Col sm={7} className="h-100">
           <Row style={{height: "70%"}}>
-            <Col><MyMap data={countries} myFunc={myFunc}/></Col>
+            <Col style={{height: "100%"}}><MyMap data={countries} myFunc={myFunc}/></Col>
           </Row>
           <Row style={{height: "30%"}}>
-            <Timeline data={countries}/> 
+            <Col className="timeline">
+              <Card><Timeline data={countries}/></Card>
+            </Col>
           </Row>
         </Col>
         <Col sm={5} className="h-100">

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import geoJSON from './countries.geo.json'
 import { useD3 } from '../hooks/useD3';
-import "./Map.css";
+import "./MyMap.css";
 
 const CaseChart = ({ data, myFunc}) => {
     useEffect(() => {
@@ -27,13 +27,14 @@ const CaseChart = ({ data, myFunc}) => {
             .attr("height", height)
 
         var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ")
+        if (!data) return;
 
         data = data.map(d => {
             let total = +d.total
             total = total >= 0 ? total: -total 
             return {date: parseTime(d.date), total: total}
         })
-        console.log(data)
+        //console.log(data)
 
         let dates = data.map(d => d.date).sort((a, b) => {return d3.descending(a.date, b.date)})
         

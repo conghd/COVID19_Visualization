@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import geoJSON from './countries.geo.json'
 import { useD3 } from '../hooks/useD3';
-import "./Map.css";
+import "./MyMap.css";
 
 const MyMap = ({ data, myFunc}) => {
 
@@ -12,6 +12,7 @@ const MyMap = ({ data, myFunc}) => {
     }, [data]);
 
     const ref = useD3((svg) => {
+        if (!data) return;
         const width = svg.node().getBoundingClientRect().width;
         const height = svg.node().getBoundingClientRect().height;
 
@@ -81,7 +82,7 @@ const MyMap = ({ data, myFunc}) => {
         
         
         // Calculate radius
-        console.log(data)
+        //console.log(data)
         let maxCnt = d3.max(data, item => +item.total)
         let maxRadius = 20
         let populationScale = d3.scaleSqrt()
@@ -218,8 +219,8 @@ const MyMap = ({ data, myFunc}) => {
     }, [data.length]);
 
     return (
-        <>
-        <svg id="map" ref={ref} width="100%" height="100%">
+        <div class="svg-container">
+        <svg id="map" class="svg-content" ref={ref} >
             <g id="gmap"></g>
             <g id="gdata"></g>
             <g id="glegend"></g>
@@ -237,7 +238,7 @@ const MyMap = ({ data, myFunc}) => {
             </g>
         </svg>
         <div id="tooltip"></div>
-        </>
+        </div>
     );
 }
 

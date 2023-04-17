@@ -1,0 +1,77 @@
+svg {
+    /* background-color: #bbbbff; */
+    border: 1px solid #888888;
+  }
+
+  path {
+    fill:   #e0f0d4;
+    stroke: #666;
+    stroke-width: .5px;
+  }
+
+  .overlay {
+      display: none;
+      fill: none;
+      pointer-events: all;
+  }
+
+  #map {
+    background-color: #bbbbff;
+  }
+
+#tooltip {
+    width: 240px;
+    height: 120px;
+    border: solid 1px gray;
+    padding: 5px;
+    position: absolute; 
+    display: none;
+    background-color: white;
+    font-size: 13px;
+}
+
+#glegend text {
+  color: red;
+}
+
+
+g.zoom-controls {
+  cursor: pointer;
+  pointer-events: all;
+}
+g.zoom-controls rect {
+  fill: white;
+  stroke: #596877;
+  stroke-width: 1;
+}
+g.zoom-controls line {
+  stroke: #596877;
+  stroke-width: 2;
+}
+
+.svg-container { 
+  width: 100%;
+  height: 100%;
+  /*
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%; 
+	vertical-align: middle; 
+	overflow: hidden; 
+  */
+}
+
+.svg-content { 
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  /*
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+
+  */
+}
