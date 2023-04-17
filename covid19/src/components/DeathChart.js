@@ -30,7 +30,7 @@ const DeathChart = ({ data, myFunc}) => {
 
         data = data.map(d => {
             let total = +d.total
-            total = total >= 0 ? total: 0
+            total = total >= 0 ? total: -total; 
             return {date: parseTime(d.date), total: total}
         })
         console.log(data)

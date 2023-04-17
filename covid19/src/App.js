@@ -17,11 +17,13 @@ function App() {
   const [cases, setCases] = useState([])
   const [deaths, setDeaths] = useState([])
   const [regionId, setRegionId] = useState(0);
-  const [from, setFrom] = useState("2023-01-01")
+  const [from, setFrom] = useState("2023-01-25")
   const [to, setTo] = useState("2023-03-09")
-  const [totalCases, setTotalCases] = useState(0)
-  const [totalDeaths, setTotalDeaths] = useState(0)
+  const [totalCases, setTotalCases] = useState(762201169)
+  const [totalDeaths, setTotalDeaths] = useState(6893190)
 
+  
+  let fm = d3.format(".2s")
   useEffect(() => {
     fetch("http://localhost:3001/cases")
       .then(response => {
@@ -69,8 +71,8 @@ function App() {
     <Container fluid={true} className="vh-100 align-items-center">
       <Row style={{height: "15%", alignItems: "center", marginTop: "30px" }}>
         <Col sm={4} className='h-100 align-items-center'>COVID-19 DASHBOARD</Col>
-        <Col sm={4} className='h-100' style={{alignItems: "center"}}>Total cases: {totalCases}</Col>
-        <Col sm={4} className='h-100'>Total deaths: {totalDeaths}</Col>
+        <Col sm={4} className='h-100' style={{alignItems: "center"}}>Total cases: {fm(totalCases)}</Col>
+        <Col sm={4} className='h-100'>Total deaths: {fm(totalDeaths)}</Col>
       </Row>
       <Row style={{height: "85%"}}>
         <Col sm={7} className="h-100">
