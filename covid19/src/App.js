@@ -8,6 +8,7 @@ import { useState, useEffect, useRef, createContext } from 'react';
 import MyMap from './components/MyMap';
 import CaseChart from './components/CaseChart';
 import DeathChart from './components/DeathChart';
+import Timeline from './components/Timeline';
 
 const AppContext = createContext();
 
@@ -77,7 +78,7 @@ function App() {
             <Col><MyMap data={countries} myFunc={myFunc}/></Col>
           </Row>
           <Row style={{height: "30%"}}>
-            Timeline
+            <Timeline data={countries}/> 
           </Row>
         </Col>
         <Col sm={5} className="h-100">
