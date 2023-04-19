@@ -17,10 +17,14 @@ app.get('/', (request, response) => {
   response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 
-app.get('/regions', db.getRegions)
-app.get('/cases', db.getCases)
-app.get('/totalcases/:region_id/:from/:to', db.getTotalCases)
-app.get('/totaldeaths/:region_id/:from/:to', db.getTotalDeaths)
+app.get('/regions2', db.getRegions2)
+//app.get('/regions', db.getRegions)
+app.get('/cases2', db.getCases2)
+//app.get('/cases', db.getCases)
+//app.get('/totalcases/:region/:from/:to', db.getTotalCases)
+app.get('/totalcases2/:region/:from/:to', db.getTotalCases2)
+//app.get('/totaldeaths/:region/:from/:to', db.getTotalDeaths)
+app.get('/totaldeaths2/:region/:from/:to', db.getTotalDeaths2)
 
 
 /*
