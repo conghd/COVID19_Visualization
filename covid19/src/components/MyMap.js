@@ -7,9 +7,7 @@ import { useD3 } from '../hooks/useD3';
 import "./MyMap.css";
 
 const MyMap = ({ data, myFunc}) => {
-
-    useEffect(() => {
-    }, [data]);
+    const [region, setRegion] = useState("");
 
     const ref = useD3((svg) => {
         if (!data) return;
@@ -53,7 +51,7 @@ const MyMap = ({ data, myFunc}) => {
            .attr("height", height);
         var map = d3.select("#gmap")
 
-        d3.select(".overlay")
+        d3.select(".overlay2")
             .attr("width", width)
             .attr("height", height);
 
@@ -68,9 +66,13 @@ const MyMap = ({ data, myFunc}) => {
             .data(geoJSON.features)
             .enter()
             .append('path')
+            .attr("id", (d, i) => {
+                return "country" + d.id;
+            })
+            .attr("class", "country")
         .on("mouseover", (d, i) => {
 
-            d3.select(this).transition().duration('50').attr("opacity", '0.85');
+            d3.select(this).transition().duration('750').attr("opacity", '0.25');
             console.log("mouseenter");
             ///showTooltip(d, [e.event.pageX, e.event.pageY])
         })
@@ -102,7 +104,6 @@ const MyMap = ({ data, myFunc}) => {
         .attr("fill", "#eed202")
         .on("mouseover", (e, d) => {
             d3.select(this).transition().duration('50').attr("opacity", '0.85');
-            //console.log("mouseenter");
             showTooltip(d, [d3.pointer(e)[0], d3.pointer(e)[1]])
         })
         .on("mouseleave", (e, d) => {
@@ -111,7 +112,7 @@ const MyMap = ({ data, myFunc}) => {
 
         })
         .on("click", d => {
-            console.log("click");
+            //console.log("click");
         })
         
         //===== LEGEND =========
@@ -155,10 +156,24 @@ const MyMap = ({ data, myFunc}) => {
         // The following variables track the last processed event.
         var translateLast = [0,0];
         var scaleLast     = null;
+        var region = "world";
 
         function myrender() {
             map.selectAll('path')       // Redraw all map paths
-                .attr('d', path);
+                .attr('d', d => path(d))
+                .on("click", (d, i) => {
+                    d3.selectAll(".country").classed("country-on", false);
+                    if (region === "world" || region !== i.properties.name) {
+                        //console.log("1: " + region)
+                        region = i.properties.name;
+                        //console.log(i.properties.name);
+                        d3.select("#country" + i.id).classed("country-on", true);
+                    } else {
+                        //console.log("2")
+                        region = "world";
+                    }
+                    myFunc(region);
+                })
 
             map.selectAll('path').filter((d, i) => {
                 return i === 21;
@@ -219,12 +234,12 @@ const MyMap = ({ data, myFunc}) => {
     }, [data.length]);
 
     return (
-        <div class="svg-container">
-        <svg id="map" class="svg-content" ref={ref} >
+        <div className="svg-container">
+        <svg id="map" className="svg-content" ref={ref} >
             <g id="gmap"></g>
             <g id="gdata"></g>
             <g id="glegend"></g>
-            <rect className="overlay" ></rect>
+            <rect className="overlay2" ></rect>
             <g className="zoom-controls" transform="translate(10, 10)">
             <g id="zoom-in" transform="translate(0, 0)">
               <rect width="30" height="30"></rect>

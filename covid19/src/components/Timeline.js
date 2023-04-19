@@ -3,32 +3,30 @@ import { Component } from 'react';
 import { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import { useD3 } from '../hooks/useD3';
+import './Timeline.css';
 
 const Timeline = ({data, myFunc }) => {
     const ref = useD3((svg) => {
-        const width = svg.node().getBoundingClientRect().width;
-        const height = svg.node().getBoundingClientRect().height;
-        //let svg = d3.select("#caseChart")
-        let margin = {
-            top: 10,
-            bottom: 30,
-            left: 30,
-            right: 10
-        }
+        const brushElement = d3.select("#mybrush")
+        const axisElement = d3.select("#myaxis")
+        const parentWidth = svg.node().getBoundingClientRect().width;
+        const parentHeight = svg.node().getBoundingClientRect().height;
+        const margin = ({top: 10, right: 0, bottom: 20, left: 0})
+        const width = parentWidth - margin.left - margin.right;
+        const height = parentHeight - margin.top - margin.bottom;
 
-        const brushGroup = d3
-            .select("svg")
-            .append("g")
-            .classed("brush", true);
-
-        const brushX = d3.brushX().extent([0, 0], [600, 50])
-        brushGroup.call(brushX);
+        const x = d3.scaleTime()
+            .domain([new Date(2019, 1, 1), new Date(2019, 8, width / 60) - 1])
+            .rangeRound([margin.left, width - margin.right])
 
     }, [data.length])
 
     return (
-        <div class="svg-container">
-            <svg id="idtimeline" class="svg-content" ref={ref}/>
+        <div className="svg-container">
+            <svg id="idtimeline" className="svg-content" ref={ref}>
+                <g id="mybrush"></g>
+                <g id="myaxis"></g>
+            </svg>
         </div>
     )
 

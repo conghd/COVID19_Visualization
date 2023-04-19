@@ -6,7 +6,7 @@ import geoJSON from './countries.geo.json'
 import { useD3 } from '../hooks/useD3';
 import "./MyMap.css";
 
-const DeathChart = ({ data, myFunc}) => {
+const DeathChart = ({ data, deathRegion, myFunc}) => {
     useEffect(() => {
     }, [data]);
 
@@ -26,7 +26,8 @@ const DeathChart = ({ data, myFunc}) => {
         svg.attr("width", width)
             .attr("height", height)
 
-        var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ")
+        //var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ")
+        var parseTime = d3.timeParse("%Y-%m-%d")
 
         if (!data) return;
 
@@ -60,16 +61,19 @@ const DeathChart = ({ data, myFunc}) => {
         // Draw bars
         let body = d3.select("#gdeathchart")
         var bar = body.selectAll("rect")
-            .data(data, d => d.total)
-            .enter().append("rect")
+            .data(data, d => d.total);
+        bar.enter().append("rect")
             .style("transform", (d, i) => `translate(${margin.left + i * barWidth }px,${ margin.top}px)`)
-
-        bar.attr("y", d => bodyHeight- yScale(d.total))
+            //.attr("y", d => bodyHeight- yScale(d.total))
+            .attr("y", d => yScale(d.total))
             .attr("width", barWidth )
-            .attr("height", d => yScale(d.total))
+            //.attr("height", d => yScale(d.total))
+            .attr("height", d => bodyHeight - yScale(d.total))
             .attr("fill", "red")
 
-        svg.append("g")
+        bar.exit().remove();
+
+        d3.select("#id_death_axisX")
             .style("transform",
                 `translate(${margin.left}px,${height - margin.bottom}px)`
             )
@@ -78,7 +82,8 @@ const DeathChart = ({ data, myFunc}) => {
         let fm = d3.format(".2s")
         let yAxis = d3.axisLeft(yScale)
             .tickFormat(d => { return fm(d).replace('million', 'M') } );
-        svg.append("g")
+        
+        d3.select("#id_death_axisY")
             .style("transform",
                 `translate(${margin.left}px, ${margin.top}px)`
             )
@@ -87,12 +92,14 @@ const DeathChart = ({ data, myFunc}) => {
         /*
         */
 
-    }, [data.length]);
+    }, [data.length, deathRegion]);
 
     return (
         <>
         <svg id="deathChart" ref={ref} width="100%" height="100%">
             <g id="gdeathchart"></g>
+            <g id="id_death_axisX"></g>
+            <g id="id_death_axisY"></g>
         </svg>
         <div id="tooltip"></div>
         </>

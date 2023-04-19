@@ -2,14 +2,28 @@ svg {
     /* background-color: #bbbbff; */
     border: 1px solid #888888;
   }
+  #map path {
+    /*
+    fill:   #e0f0d4;
+    stroke: #666;
+    stroke-width: .5px;
+    */
+  }
 
-  path {
+  #map path .selected {
+    fill: #ff0000;
+  }
+
+  .country {
     fill:   #e0f0d4;
     stroke: #666;
     stroke-width: .5px;
   }
 
-  .overlay {
+  .country-on{
+    fill: #4B5358;   /* highlight colour for selected country */
+  }
+  .overlay2 {
       display: none;
       fill: none;
       pointer-events: all;
